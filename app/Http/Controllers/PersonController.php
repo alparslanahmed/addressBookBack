@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Person;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class PersonController extends Controller
@@ -55,7 +56,7 @@ class PersonController extends Controller
         ]);
 
         $person->saveOrFail();
-
+        Artisan::call('cache:clear');
         return response()->json(['data' => $person]);
     }
 
@@ -72,6 +73,7 @@ class PersonController extends Controller
         $person->gender = $request->get('gender');
         $person->birthday = Carbon::parse($request->get('birthday'));
         $person->saveOrFail();
+        Artisan::call('cache:clear');
         return response()->json(['data' => $person]);
     }
 
@@ -84,6 +86,8 @@ class PersonController extends Controller
     public function destroy(Person $person)
     {
         $person->delete();
+        Artisan::call('cache:clear');
         return response()->json(['type' => 'success']);
     }
+
 }

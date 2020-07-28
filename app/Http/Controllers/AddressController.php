@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Address;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 
 class AddressController extends Controller
@@ -48,7 +49,7 @@ class AddressController extends Controller
         ]);
 
         $person->saveOrFail();
-
+        Artisan::call('cache:clear');
         return response()->json(['data' => $person]);
     }
 
@@ -77,6 +78,7 @@ class AddressController extends Controller
         $address->country_name = $request->get('country_name');
         $address->postal_code = $request->get('postal_code');
         $address->saveOrFail();
+        Artisan::call('cache:clear');
         return response()->json(['data' => $address]);
     }
 
@@ -89,6 +91,7 @@ class AddressController extends Controller
     public function destroy(Address $address)
     {
         $address->delete();
+        Artisan::call('cache:clear');
         return response()->json(['type' => 'success']);
     }
 }
