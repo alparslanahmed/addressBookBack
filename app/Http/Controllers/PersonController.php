@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Person;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PersonController extends Controller
 {
@@ -15,7 +16,11 @@ class PersonController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => Person::orderBy('id', 'DESC')->get()]);
+        $data = Cache::remember('persons', 60*60, function() {
+            return Person::orderBy('id', 'DESC')->get();
+        });
+
+        return response()->json(['data' => $data]);
     }
 
     /**

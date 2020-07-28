@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Address;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AddressController extends Controller
 {
@@ -14,7 +15,11 @@ class AddressController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => Address::orderBy('id', 'DESC')->get()]);
+        $data = Cache::remember('persons', 60 * 60, function () {
+            return Address::orderBy('id', 'DESC')->get();
+        });
+
+        return response()->json(['data' => $data]);
     }
 
 
@@ -38,7 +43,8 @@ class AddressController extends Controller
             'address' => $request->get('address'),
             'city_name' => $request->get('city_name'),
             'country_name' => $request->get('country_name'),
-            'postal_code' => $request->get('postal_code')
+            'postal_code' => $request->get('postal_code'),
+            'person_id' => $request->get('person_id')
         ]);
 
         $person->saveOrFail();
