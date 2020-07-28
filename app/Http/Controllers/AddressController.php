@@ -14,10 +14,10 @@ class AddressController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function person_addresses($person_id)
     {
-        $data = Cache::remember('addresses', 60 * 60, function () {
-            return Address::orderBy('id', 'DESC')->get();
+        $data = Cache::remember('addresses/' . $person_id, 60 * 60, function () use ($person_id) {
+            return Address::where('person_id', $person_id)->orderBy('id', 'DESC')->get();
         });
 
         return response()->json(['data' => $data]);

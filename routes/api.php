@@ -19,5 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::resource('person', 'PersonController');
+Route::get('person_addresses/{person_id}', 'AddressController@person_addresses');
 Route::resource('address', 'AddressController');
 
