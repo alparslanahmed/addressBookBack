@@ -15,7 +15,7 @@ class AddressController extends Controller
      */
     public function index()
     {
-        $data = Cache::remember('persons', 60 * 60, function () {
+        $data = Cache::remember('addresses', 60 * 60, function () {
             return Address::orderBy('id', 'DESC')->get();
         });
 
